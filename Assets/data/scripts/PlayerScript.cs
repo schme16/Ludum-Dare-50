@@ -6,11 +6,18 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour {
 	public GameObject player;
 	public Rigidbody2D rb;
-
+	public Transform LeftFoot;
+	public Transform RightFoot;
+	public Transform CentreStep;
 	public bool groundCheck = false;
 	public Animator animator;
 	public float playerSpeed = 5f;
 	public float jumpPower = 5f;
+	public float groundCheckDistance = 1f;
+	public AudioSource audio;
+	public AudioClip JumpSfx;
+	public AudioClip WalkSfx;
+	public AudioClip LandSfx;
 	int GroundedKey = Animator.StringToHash("Grounded");
 	int JumpKey = Animator.StringToHash("Jump");
 	int WalkKey = Animator.StringToHash("Walk");
@@ -35,25 +42,28 @@ public class PlayerScript : MonoBehaviour {
 
 		//Player on the ground
 		if (_groundCheck) {
-			
 			//Walking
 			if (X != 0) {
 				animator.ResetTrigger(GroundedKey);
 				animator.ResetTrigger(IdleKey);
+				animator.ResetTrigger(JumpKey);
 				animator.SetTrigger(WalkKey);
+				//audio.PlayOneShot(WalkSfx);
+
 			}
 			else {
 				animator.ResetTrigger(GroundedKey);
 				animator.ResetTrigger(WalkKey);
+				animator.ResetTrigger(JumpKey);
 				animator.SetTrigger(IdleKey);
 			}
 
 			//This is fired when the player grounds
 			if (_groundCheck && !groundCheck) {
-				
-				//TODO: Play sfx for landing
+				//audio.PlayOneShot(LandSfx);
 				animator.ResetTrigger(WalkKey);
 				animator.ResetTrigger(IdleKey);
+				animator.ResetTrigger(JumpKey);
 				animator.SetTrigger(GroundedKey);
 			}
 		}
@@ -61,8 +71,8 @@ public class PlayerScript : MonoBehaviour {
 
 		//Was grounded, then jumped
 		if (_groundCheck && groundCheck && Jump != 0) {
-			//TODO: Play sfx for jump
-			
+			//audio.PlayOneShot(JumpSfx);
+
 			rb.velocity = new Vector2(0, jumpPower);
 			animator.SetTrigger(JumpKey);
 			animator.ResetTrigger(WalkKey);
@@ -90,14 +100,23 @@ public class PlayerScript : MonoBehaviour {
 
 
 	bool IsGrounded() {
-		var RaycastGround = Physics2D.Raycast(transform.position, Vector2.down, 0.7f);
-		if (RaycastGround.collider != null) {
-			if (RaycastGround.collider.CompareTag("Ground")) {
-				return true;
-			}
-			else {
-				return false;
-			}
+		RaycastHit2D RaycastGroundLeftFoot = Physics2D.Raycast(LeftFoot.position, Vector2.down, groundCheckDistance,
+			LayerMask.GetMask("Ground"));
+
+		RaycastHit2D RaycastGroundRightFoot = Physics2D.Raycast(RightFoot.position, Vector2.down, groundCheckDistance,
+			LayerMask.GetMask("Ground"));
+
+		RaycastHit2D RaycastGroundCentreStep = Physics2D.Raycast(CentreStep.position, Vector2.down,
+			groundCheckDistance,
+			LayerMask.GetMask("Ground"));
+
+		RaycastHit2D RaycastGroundBody = Physics2D.Raycast(transform.position, Vector2.down,
+			groundCheckDistance,
+			LayerMask.GetMask("Ground"));
+
+		if (RaycastGroundLeftFoot.collider != null || RaycastGroundRightFoot.collider != null ||
+			RaycastGroundCentreStep.collider != null || RaycastGroundBody.collider != null) {
+			return true;
 		}
 		else {
 			return false;
