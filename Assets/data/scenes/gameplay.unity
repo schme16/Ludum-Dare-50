@@ -5227,7 +5227,6 @@ GameObject:
   - component: {fileID: 383595440}
   - component: {fileID: 383595439}
   - component: {fileID: 383595438}
-  - component: {fileID: 383595441}
   - component: {fileID: 383595442}
   - component: {fileID: 383595443}
   - component: {fileID: 383595445}
@@ -5337,40 +5336,6 @@ Transform:
   m_Father: {fileID: 1097256619}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &383595441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 383595437}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbfb23717f7dee14688bccda60b77b9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _characterBounds:
-    m_Center: {x: 0, y: 6.92, z: 0}
-    m_Extent: {x: 1.43, y: 0.1, z: 0}
-  _groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  _detectorCount: 3
-  _detectionRayLength: 0.1
-  _rayBuffer: 0.1
-  _acceleration: 90
-  _moveClamp: 13
-  _deAcceleration: 60
-  _apexBonus: 2
-  _fallClamp: -40
-  _minFallSpeed: 80
-  _maxFallSpeed: 120
-  _jumpHeight: 30
-  _jumpApexThreshold: 10
-  _coyoteTimeThreshold: 0.1
-  _jumpBuffer: 0.1
-  _jumpEndEarlyGravityModifier: 3
-  _freeColliderIterations: 10
 --- !u!58 &383595442
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -5455,6 +5420,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2013833321}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &492246732
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 492246734}
+  - component: {fileID: 492246733}
+  m_Layer: 0
+  m_Name: background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &492246733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492246732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a60aa0077afa1b4092c8df13fd2ef0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &492246734
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492246732}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.25088102, y: 1.5626467, z: -0.049249165}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &575002950
 GameObject:
@@ -15318,8 +15327,8 @@ MonoBehaviour:
   linePrefab: {fileID: 8158736950119024591, guid: 060ef9da3ea75694780acf073278ff83, type: 3}
   currentLine: {fileID: 0}
   lineRenderer: {fileID: 0}
+  edgeCollider: {fileID: 0}
   fingerPositions: []
-  meshCollider: {fileID: 0}
 --- !u!4 &1439931972
 Transform:
   m_ObjectHideFlags: 0
