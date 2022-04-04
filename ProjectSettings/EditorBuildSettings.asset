@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/data/scenes/enter-name.unity
+    guid: 5315962733f750045b3667f30a852982
+  - enabled: 1
     path: Assets/data/scenes/main-menu.unity
     guid: fc95350cbd61b184a8bb4cea11c4da2a
   - enabled: 1
@@ -14,6 +17,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/data/scenes/highscores.unity
     guid: 06bf5b811090cf44ea6d5dbd91062383
+  - enabled: 1
+    path: Assets/data/scenes/restart.unity
+    guid: 1ddabfac6a3212542b4f52e5089177ad
+  - enabled: 1
+    path: Assets/data/scenes/howToPlay.unity
+    guid: 14401d2c976f8d443af3bfba5285eb75
+  - enabled: 1
+    path: Assets/data/scenes/howToPlay-restart.unity
+    guid: 6baaff7ce9d3b8445b645d13ff261050
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 0e9173cfa6551734b8fc1aeaa22ef936, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: a344c137356a2444f8d69c114b7369c2, type: 2}

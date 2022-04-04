@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class DrawLine : MonoBehaviour {
 	public GameObject linePrefab;
+	public Transform ground;
 	public GameObject currentLine;
 
 	public LineRenderer lineRenderer;
 	public EdgeCollider2D edgeCollider;
+	public PolygonCollider2D polyCollider;
+	public bool skip;
 
 	public List<Vector2> fingerPositions;
 
@@ -17,6 +20,9 @@ public class DrawLine : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
+		if (skip) return;
+		
+		
 		if (Input.GetMouseButtonDown(0)) {
 			CreateLine();
 		}
@@ -27,19 +33,29 @@ public class DrawLine : MonoBehaviour {
 				UpdateLine(tempFingerPos);
 			}
 		}
+		else if (currentLine) {
+			var rb = currentLine.AddComponent<Rigidbody2D>();
+			polyCollider.enabled = true;
+			Debug.Log(11111);
+			currentLine = null;
+		}
 	}
 
 	void CreateLine() {
 		currentLine = Instantiate(linePrefab, Vector3.zero, Quaternion.identity);
+		currentLine.transform.SetParent(ground);
 		lineRenderer = currentLine.GetComponent<LineRenderer>();
-		edgeCollider = currentLine.GetComponent<EdgeCollider2D>();
+		//edgeCollider = currentLine.GetComponent<EdgeCollider2D>();
+		polyCollider = currentLine.GetComponent<PolygonCollider2D>();
+		polyCollider.enabled = false;
 		fingerPositions.Clear();
 		fingerPositions.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 		fingerPositions.Add(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
 		lineRenderer.SetPosition(0, fingerPositions[0]);
 		lineRenderer.SetPosition(1, fingerPositions[1]);
-		edgeCollider.points = fingerPositions.ToArray();
+		//edgeCollider.points = fingerPositions.ToArray();
+		polyCollider.points = fingerPositions.ToArray();
 	}
 
 
@@ -47,7 +63,16 @@ public class DrawLine : MonoBehaviour {
 		fingerPositions.Add(newFingerPos);
 		lineRenderer.positionCount++;
 		lineRenderer.SetPosition(lineRenderer.positionCount - 1, newFingerPos);
-		edgeCollider.points = fingerPositions.ToArray();
+		//edgeCollider.points = fingerPositions.ToArray();
+		polyCollider.points = fingerPositions.ToArray();
+	}
+
+	public void SkipEnable() {
+		Debug.Log(111);
+		skip = true;
+	}
+	public void SkipDisable() {
+		Debug.Log(222);
+		skip = false;
 	}
 }
-

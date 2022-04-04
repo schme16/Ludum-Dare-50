@@ -1,19 +1,27 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour {
+	public TextMeshProUGUI height;
 	public GameObject player;
 	public Rigidbody2D rb;
 	public Transform LeftFoot;
 	public Transform RightFoot;
 	public Transform CentreStep;
+	public GameObject deathSFX;
+
 	public bool groundCheck = false;
 	public Animator animator;
 	public float playerSpeed = 5f;
 	public float jumpPower = 5f;
 	public float groundCheckDistance = 1f;
+	public LevelChanger lc;
+	float startYPos;
 	public AudioSource audio;
 	public AudioClip JumpSfx;
 	public AudioClip WalkSfx;
@@ -22,13 +30,19 @@ public class PlayerScript : MonoBehaviour {
 	int JumpKey = Animator.StringToHash("Jump");
 	int WalkKey = Animator.StringToHash("Walk");
 	int IdleKey = Animator.StringToHash("Idle");
+	public bool dead = false;
+	public bool LeftGround = false;
+	bool _dead = false;
+
 
 	// Start is called before the first frame update
-	void Start() {
+	void Awake() {
+		dead = false;
+		_dead = false;
+		startYPos = transform.position.y;
 	}
 
 	// Update is called once per frame
-
 	void FixedUpdate() {
 		var _groundCheck = IsGrounded();
 
@@ -49,7 +63,6 @@ public class PlayerScript : MonoBehaviour {
 				animator.ResetTrigger(JumpKey);
 				animator.SetTrigger(WalkKey);
 				//audio.PlayOneShot(WalkSfx);
-
 			}
 			else {
 				animator.ResetTrigger(GroundedKey);
@@ -83,22 +96,37 @@ public class PlayerScript : MonoBehaviour {
 
 		groundCheck = _groundCheck;
 
-		//X axis input changing
-		if (X != 0) {
-			rb.velocity = new Vector2(X * playerSpeed, rb.velocity.y);
-			//Set the player facing direction
-			if (X > 0) {
-				transform.parent.localScale =
-					new Vector3(-1, transform.parent.localScale.y, transform.parent.localScale.z);
+		if (!dead) {
+			//X axis input changing
+			if (X != 0) {
+				rb.velocity = new Vector2(X * playerSpeed, rb.velocity.y);
+				//Set the player facing direction
+				if (X > 0) {
+					transform.parent.localScale =
+						new Vector3(-0.5f, transform.parent.localScale.y, transform.parent.localScale.z);
+				}
+				else {
+					transform.parent.localScale =
+						new Vector3(0.5f, transform.parent.localScale.y, transform.parent.localScale.z);
+				}
 			}
-			else {
-				transform.parent.localScale =
-					new Vector3(1, transform.parent.localScale.y, transform.parent.localScale.z);
-			}
+		}
+
+		if (_dead && !dead) {
+			deathSFX.SetActive(true);
+
+			StartCoroutine(getRequest());
+		}
+
+		LeftGround = transform.position.y > startYPos + 0.5f;
+
+		dead = _dead;
+		if (height) {
+			height.text = Mathf.Max(0, Mathf.RoundToInt(transform.position.y - startYPos)).ToString();
 		}
 	}
 
-
+	//Figures out if the player is touching the ground
 	bool IsGrounded() {
 		RaycastHit2D RaycastGroundLeftFoot = Physics2D.Raycast(LeftFoot.position, Vector2.down, groundCheckDistance,
 			LayerMask.GetMask("Ground"));
@@ -120,6 +148,29 @@ public class PlayerScript : MonoBehaviour {
 		}
 		else {
 			return false;
+		}
+	}
+
+	private void OnTriggerEnter2D(Collider2D col) {
+		if (col.gameObject.layer == 4) {
+			_dead = true;
+		}
+	}
+
+	IEnumerator getRequest() {
+		UnityWebRequest uwr = UnityWebRequest.Get("https://ldjam-50-inky-towers.herokuapp.com/post-score?score=" + height.text + "&name=" +
+												PlayerPrefs.GetString("player-name"));
+		yield return uwr.SendWebRequest();
+
+		if (uwr.isNetworkError) {
+			lc.LevelToLoad = "restart";
+			lc.FadeToLevel();
+			Debug.Log("Error While Sending: " + uwr.error);
+		}
+		else {
+			lc.LevelToLoad = "restart";
+			lc.FadeToLevel();
+			Debug.Log("Received: " + uwr.downloadHandler.text);
 		}
 	}
 }

@@ -39,6 +39,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: lowest
+    uniqueID: 2492499975
+    locked: 0
+  - name: Waves
+    uniqueID: 3588674461
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
